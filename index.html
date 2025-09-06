@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Iron Lady FAQ Chatbot</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    #chatbox { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: scroll; }
+    .user { color: blue; }
+    .bot { color: green; }
+  </style>
+</head>
+<body>
+  <h2>Iron Lady FAQ Chatbot</h2>
+  <div id="chatbox"></div>
+  <input id="userInput" type="text" placeholder="Ask me something..." />
+  <button onclick="sendMessage()">Send</button>
+
+  <script>
+    async function sendMessage() {
+      const input = document.getElementById('userInput').value;
+      const chatbox = document.getElementById('chatbox');
+      chatbox.innerHTML += `<div class="user"><strong>You:</strong> ${input}</div>`;
+      document.getElementById('userInput').value = '';
+
+      const res = await fetch('http://localhost:5000/chat', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({message: input})
+      });
+
+      const data = await res.json();
+      chatbox.innerHTML += `<div class="bot"><strong>Bot:</strong> ${data.reply}</div>`;
+      chatbox.scrollTop = chatbox.scrollHeight;
+    }
+  </script>
+</body>
+</html>
