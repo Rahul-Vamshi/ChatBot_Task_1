@@ -6,7 +6,7 @@ import os
 app = Flask(__name__)
 CORS(app)  # Enable CORS for frontend requests
 CORS(app, origins=["https://timely-mochi-f742c7.netlify.app/"])
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# openai.api_key = os.getenv("OPENAI_API_KEY")
 # Predefined context about Iron Lady
 context = """
 Iron Lady offers a 12-week online leadership program. It includes topics like leadership, communication, and career growth.
