@@ -1,35 +1,39 @@
 from flask import Flask, request, jsonify
-from openai import OpenAI
 from flask_cors import CORS
+from openai import OpenAI
 import os
 
+# Initialize Flask app and CORS
 app = Flask(__name__)
-CORS(app)  # Enable CORS for frontend requests
-CORS(app, origins=["https://timely-mochi-f742c7.netlify.app/"])
-# openai.api_key = os.getenv("OPENAI_API_KEY")
-# Predefined context about Iron Lady
-context = """
-Iron Lady offers a 12-week online leadership program. It includes topics like leadership, communication, and career growth.
-Participants get a certificate and are assigned a mentor. The program is fully online.
-"""
+CORS(app)
+
+# Initialize OpenAI client (picks up API key from environment variable)
+client = OpenAI()
+
 @app.route('/')
-def index():
+def home():
     return "Iron Lady Chatbot API is running!"
 
 @app.route('/chat', methods=['POST'])
 def chat():
-    user_message = request.json['message']
-    client = OpenAI()
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": "You are a helpful assistant that answers FAQs about Iron Lady’s leadership program."},
-            {"role": "user", "content": context},
-            {"role": "user", "content": user_message}
-        ]
-    )
-    reply = response.choices[0].message.content.strip()
-    return jsonify({'reply': reply})
+    try:
+        user_message = request.json.get('message', '')
+        print(f"Received: {user_message}")
 
-if __name__ == '__main__':
-    app.run(debug=True)
+        if not user_message:
+            return jsonify({"reply": "Please enter a message."}), 400
+
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant that answers FAQs about Iron Lady’s leadership programs."},
+                {"role": "user", "content": user_message}
+            ]
+        )
+
+        reply = response.choices[0].message.content.strip()
+        return jsonify({"reply": reply})
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"reply": "Sorry, something went wrong on the server."}), 500
