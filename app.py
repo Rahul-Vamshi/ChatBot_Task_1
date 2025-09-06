@@ -1,12 +1,12 @@
 from flask import Flask, request, jsonify
 import openai
 from flask_cors import CORS
+import os
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for frontend requests
 
-openai.api_key = "YOUR_OPENAI_API_KEY"  # Replace with your key
-
+openai.api_key = os.getenv("OPENAI_API_KEY")
 # Predefined context about Iron Lady
 context = """
 Iron Lady offers a 12-week online leadership program. It includes topics like leadership, communication, and career growth.
