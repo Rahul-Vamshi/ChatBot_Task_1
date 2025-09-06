@@ -12,6 +12,9 @@ context = """
 Iron Lady offers a 12-week online leadership program. It includes topics like leadership, communication, and career growth.
 Participants get a certificate and are assigned a mentor. The program is fully online.
 """
+@app.route('/')
+def index():
+    return "Iron Lady Chatbot API is running!"
 
 @app.route('/chat', methods=['POST'])
 def chat():
