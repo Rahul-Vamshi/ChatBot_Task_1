@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-import openai
+from openai import OpenAI
 from flask_cors import CORS
 import os
 
@@ -19,7 +19,7 @@ def index():
 @app.route('/chat', methods=['POST'])
 def chat():
     user_message = request.json['message']
-
+    client = OpenAI()
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
