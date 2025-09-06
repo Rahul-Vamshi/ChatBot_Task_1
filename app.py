@@ -5,7 +5,7 @@ import os
 
 # Initialize Flask app and CORS
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=["https://timely-mochi-f742c7.netlify.app"])
 
 # Initialize OpenAI client (picks up API key from environment variable)
 client = OpenAI()
